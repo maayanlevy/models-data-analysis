@@ -25,10 +25,21 @@ def load_data():
         st.code("".join(lines[max(0, e.lineno-3):e.lineno+2]), language="json")
         return pd.DataFrame()
 
+def calculate_release_cycle(df, company):
+    release_dates = df[df['Organization'] == company]['Release Date'].sort_values()
+    if len(release_dates) > 1:
+        time_deltas = release_dates.diff().dropna()
+        average_cycle = time_deltas.mean() / pd.Timedelta(days=30)
+        return average_cycle
+    return None
+
 df = load_data()
 
 # Only proceed if we have data
 if not df.empty:
+    # Add image at the top
+    st.image('geb-logo.png', width=100)
+    
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
 
@@ -39,12 +50,26 @@ if not df.empty:
     all_companies = df['Organization'].unique()
     selected_companies = st.sidebar.multiselect('Select companies:', all_companies, default=all_companies)
     
-    # Filter by date
-    all_dates = sorted(df['Year-Month'].unique())
-    selected_dates = st.sidebar.multiselect('Select dates:', all_dates, default=all_dates)
+    # Filter by date range
+    min_date = df['Release Date'].min()
+    max_date = df['Release Date'].max()
+    start_date, end_date = st.sidebar.date_input('Select date range:', [min_date, max_date], min_value=min_date, max_value=max_date)
+    
+    # Convert start_date and end_date to datetime
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
     
     # Apply filters
-    filtered_df = df[df['Organization'].isin(selected_companies) & df['Year-Month'].isin(selected_dates)]
+    filtered_df = df[df['Organization'].isin(selected_companies) & (df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
+    
+    # Calculate company-level release cycles
+    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in selected_companies}
+    
+    # Compute overall average release cycle across all selected companies
+    overall_average_cycle = pd.Series([cycle for cycle in company_cycles.values() if cycle is not None]).mean()
+
+    # Display overall average release cycle
+    st.write(f"**Total average release cycle:** {overall_average_cycle:.2f} months")
     
     # Create monthly counts by organization
     monthly_counts = filtered_df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
@@ -101,7 +126,7 @@ if not df.empty:
     )
     
     # Update hover information to include the company
-    fig.update_traces(hovertemplate='Company=%{yaxis.title.text}<br>Date=%{x}<br>Models=%{y}')
+    fig.update_traces(hovertemplate='Company=%{legendgroup}<br>Date=%{x}<br>Models=%{y}')
 
     # Remove the legend
     fig.update_layout(showlegend=False)
@@ -134,6 +159,12 @@ if not df.empty:
     company_df = filtered_df[filtered_df['Organization'] == selected_company]
     st.write(f"Models released by {selected_company}:")
     st.dataframe(company_df[['Model', 'Release Date']])
+
+    # Show company-level release cycle
+    company_cycle = company_cycles.get(selected_company)
+    if company_cycle:
+        st.write(f"**Average release cycle for {selected_company}:** {company_cycle:.2f} months")
+        st.write(f"**Current company-level release cycle:** {company_cycle:.2f} months")
 
     # Allow exploration by month
     months = sorted(filtered_df['Year-Month'].unique())
