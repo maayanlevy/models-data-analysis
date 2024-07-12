@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime
 import json
 from streamlit_plotly_events import plotly_events
@@ -51,7 +52,7 @@ if not df.empty:
     with col2:
         graph_type = st.radio(
             "Select graph type:",
-            ("Stacked Area", "Line")
+            ("Stacked Area", "Line (Total)", "Line (Stacked)")
         )
 
     if data_type == "Number of Available Models":
@@ -67,7 +68,13 @@ if not df.empty:
                       title=f'{title_prefix} by Company (Stacked Area)',
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
                       )
-    else:  # Line graph
+    elif graph_type == "Line (Total)":
+        plot_data_total = plot_data.sum(axis=1)
+        fig = px.line(x=plot_data_total.index, y=plot_data_total.values,
+                      title=f'{title_prefix} (Total)',
+                      labels={'x': 'Month', 'y': 'Number of Models'},
+                      )
+    else:  # Line (Stacked)
         fig = px.line(plot_data, x=plot_data.index, y=plot_data.columns, 
                       title=f'{title_prefix} by Company (Line)',
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
