@@ -133,7 +133,8 @@ if not df.empty:
 
     fig.update_layout(
         legend=dict(orientation='h', y=-0.2, xanchor='center', x=0.5),
-        hovermode='x unified'
+        hovermode='x unified',
+        xaxis_range=['2022-06', (max_date - pd.DateOffset(months=1)).strftime('%Y-%m')]
     )
     
     # Update hover information to include the company
@@ -159,7 +160,12 @@ if not df.empty:
             st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
         else:
             st.write(f"No data for the selected month: {selected_month_str}")
-
+    
+    # Horizontal line before per company analysis
+    st.markdown('---')
+    st.header('Per Company Analysis')
+    st.write("This section provides details on the average release cycle and models released by the selected company.")
+    
     # Allow exploration by company
     company_model_counts = filtered_df['Organization'].value_counts()
     companies = company_model_counts.index.tolist()
@@ -178,10 +184,15 @@ if not df.empty:
     st.write(f"Models released by {selected_company}:")
     company_df['Release Date'] = company_df['Release Date'].dt.strftime('%Y-%m')
     st.dataframe(company_df[['Model', 'Release Date']])
-
+    
+    # Horizontal line before per month analysis
+    st.markdown('---')
+    st.header('Per Month Analysis')
+    st.write("This section provides details on models released in the selected month.")
+    
     # Allow exploration by month
-    months = sorted(filtered_df['Year-Month'].unique())
-    selected_month = st.selectbox('Select a month:', months)
+    months = sorted(filtered_df['Year-Month'].unique(), reverse=True)
+    selected_month = st.selectbox('Select a month:', months, index=0)
 
     month_df = filtered_df[filtered_df['Year-Month'] == selected_month]
     month_df['Release Date'] = month_df['Release Date'].dt.strftime('%Y-%m')
