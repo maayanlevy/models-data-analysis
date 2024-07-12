@@ -40,6 +40,11 @@ if not df.empty:
     # Calculate cumulative sums for total available models
     cumulative_counts = monthly_counts.cumsum()
 
+    # Create a color map for companies
+    companies = df['Organization'].unique()
+    color_map = px.colors.qualitative.Plotly + px.colors.qualitative.Set1 + px.colors.qualitative.Pastel
+    company_colors = {company: color_map[i % len(color_map)] for i, company in enumerate(companies)}
+
     # Add options to switch between new releases and total available models, and graph types
     col1, col2 = st.columns(2)
     with col1:
@@ -65,7 +70,7 @@ if not df.empty:
         fig = px.area(plot_data, x=plot_data.index, y=plot_data.columns, 
                       title=f'{title_prefix} by Company (Stacked Area)',
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
-                      )
+                      color_discrete_map=company_colors)
     elif graph_type == "Line (Total)":
         plot_data_total = plot_data.sum(axis=1)
         fig = px.line(x=plot_data_total.index, y=plot_data_total.values,
@@ -76,7 +81,7 @@ if not df.empty:
         fig = px.line(plot_data, x=plot_data.index, y=plot_data.columns, 
                       title=f'{title_prefix} by Company (Line)',
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
-                      )
+                      color_discrete_map=company_colors)
 
     fig.update_layout(legend_title_text='Company')
     
@@ -91,11 +96,12 @@ if not df.empty:
         st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
 
     # Allow exploration by company
-    companies = sorted(df['Organization'].unique())
-    if 'Unknown' in companies:
-        st.warning("Some models have unknown organizations. These will be listed as 'Unknown'.")
+    company_model_counts = df['Organization'].value_counts()
+    companies = company_model_counts.index.tolist()
+    company_options = [f"{company} ({count} models)" for company, count in zip(companies, company_model_counts)]
     
-    selected_company = st.selectbox('Select a company:', companies)
+    selected_company_option = st.selectbox('Select a company:', company_options)
+    selected_company = selected_company_option.split(' (')[0]
 
     company_df = df[df['Organization'] == selected_company]
     st.write(f"Models released by {selected_company}:")
