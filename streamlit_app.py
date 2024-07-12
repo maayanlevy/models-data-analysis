@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 from datetime import datetime
 import json
+from streamlit_plotly_events import plotly_events
 
 # Load the data
 @st.cache_data
@@ -13,6 +14,7 @@ def load_data():
         df = pd.DataFrame(data)
         df['Release Date'] = pd.to_datetime(df['Release Date'], format='%Y-%m-%d', errors='coerce')
         df = df.dropna(subset=['Release Date'])
+        df['Organization'] = df['Organization'].fillna('Unknown')
         return df
     except json.JSONDecodeError as e:
         st.error(f"Error parsing JSON file: {str(e)}")
@@ -30,19 +32,59 @@ if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
 
-    # Create a monthly graph of released models
-    df['Year-Month'] = df['Release Date'].dt.to_period('M')
-    monthly_counts = df.groupby('Year-Month').size().reset_index(name='Count')
-    monthly_counts['Year-Month'] = monthly_counts['Year-Month'].astype(str)
-
-    fig = px.bar(monthly_counts, x='Year-Month', y='Count',
-                 title='Number of LLM Releases per Month',
-                 labels={'Year-Month': 'Month', 'Count': 'Number of Releases'})
-    st.plotly_chart(fig)
-
-    # Handle None values in the 'Organization' column
-    df['Organization'] = df['Organization'].fillna('Unknown')
+    # Prepare data for graphs
+    df['Year-Month'] = df['Release Date'].dt.to_period('M').astype(str)
     
+    # Create monthly counts by organization
+    monthly_counts = df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
+    
+    # Calculate cumulative sums for total available models
+    cumulative_counts = monthly_counts.cumsum()
+
+    # Add options to switch between new releases and total available models, and graph types
+    col1, col2 = st.columns(2)
+    with col1:
+        data_type = st.radio(
+            "Select data type:",
+            ("Number of Available Models", "Newly Released Models per Month")
+        )
+    with col2:
+        graph_type = st.radio(
+            "Select graph type:",
+            ("Stacked Area", "Line")
+        )
+
+    if data_type == "Number of Available Models":
+        plot_data = cumulative_counts
+        title_prefix = 'Total Number of Available LLM Models'
+    else:
+        plot_data = monthly_counts
+        title_prefix = 'Newly Released LLM Models per Month'
+
+    # Create the selected graph
+    if graph_type == "Stacked Area":
+        fig = px.area(plot_data, x=plot_data.index, y=plot_data.columns, 
+                      title=f'{title_prefix} by Company (Stacked Area)',
+                      labels={'value': 'Number of Models', 'Year-Month': 'Month'},
+                      )
+    else:  # Line graph
+        fig = px.line(plot_data, x=plot_data.index, y=plot_data.columns, 
+                      title=f'{title_prefix} by Company (Line)',
+                      labels={'value': 'Number of Models', 'Year-Month': 'Month'},
+                      )
+
+    fig.update_layout(legend_title_text='Company')
+    
+    # Make the graph interactive
+    selected_points = plotly_events(fig, click_event=True, hover_event=False)
+
+    # Display models for the selected month
+    if selected_points:
+        selected_month = selected_points[0]['x']
+        st.subheader(f"Models released in {selected_month}")
+        month_df = df[df['Year-Month'] == selected_month]
+        st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
+
     # Allow exploration by company
     companies = sorted(df['Organization'].unique())
     if 'Unknown' in companies:
@@ -66,11 +108,8 @@ if not df.empty:
     if st.checkbox('Show raw data'):
         st.subheader('Raw data')
         st.write(df)
-else:
-    st.error("No data available. Please fix the JSON file and restart the app.")
 
-# Display data quality issues
-if not df.empty:
+    # Display data quality issues
     missing_orgs = df['Organization'].isnull().sum()
     if missing_orgs > 0:
         st.warning(f"There are {missing_orgs} models with missing organization information.")
@@ -78,3 +117,5 @@ if not df.empty:
     missing_dates = df['Release Date'].isnull().sum()
     if missing_dates > 0:
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
+else:
+    st.error("No data available. Please fix the JSON file and restart the app.")
