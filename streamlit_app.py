@@ -58,7 +58,15 @@ if not df.empty:
         overall_months, overall_days = 0, 0
 
     # Display overall average release cycle prominently
-    st.markdown(f"<h2 style='text-align: center; color: black;'>Total average release cycle: {overall_months} months and {overall_days} days</h2>", unsafe_allow_html=True)
+    st.markdown(f"""
+        <div style="background-color: #E8F0FE; padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 20px; color: #5F6368;">Total average release cycle</div>
+            <div style="font-size: 40px; font-weight: bold; color: #1A73E8;">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {overall_months} months {overall_days} days
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
     # Create sidebar filters
     st.sidebar.header('Filters')
