@@ -86,26 +86,30 @@ if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
 
-    # Filter out companies with only one model
-    companies_with_multiple_models = df['Organization'].value_counts()
-    companies_with_multiple_models = companies_with_multiple_models[companies_with_multiple_models > 1].index.tolist()
-    df = df[df['Organization'].isin(companies_with_multiple_models)]
-
     # Calculate the overall last release date for all companies
     last_release_date = df['Release Date'].max()
 
     # Display last update note
     st.markdown(f"**Last update:** {last_release_date.strftime('%Y-%m-%d')}")
 
+    # Filter out companies with only one model
+    model_counts = df['Organization'].value_counts()
+    companies_with_multiple_models = model_counts[model_counts > 1].index.tolist()
+    df_filtered = df[df['Organization'].isin(companies_with_multiple_models)]
+
     # Calculate company-level release cycles
-    company_cycles = {company: calculate_release_cycle(df, company, last_release_date) for company in df['Organization'].unique()}
-    
-    # Compute overall average release cycle across all companies
-    average_cycles = [days for days, months, days in company_cycles.values() if days is not None]
-    if average_cycles:
-        overall_average_cycle = sum(average_cycles) / len(average_cycles)
-        overall_months = int(overall_average_cycle // 30)
-        overall_days = int(overall_average_cycle % 30)
+    company_cycles = {company: calculate_release_cycle(df_filtered, company, last_release_date) for company in df_filtered['Organization'].unique()}
+
+    # Calculate the average release cycle for each company
+    company_avg_cycles = {company: cycle[0] for company, cycle in company_cycles.items() if cycle[0] is not None}
+    avg_cycles_df = pd.DataFrame(list(company_avg_cycles.items()), columns=['Company', 'Average Cycle (days)'])
+    avg_cycles_df = avg_cycles_df.sort_values(by='Average Cycle (days)')
+
+    # Calculate overall average release cycle from avg_cycles_df
+    if not avg_cycles_df.empty:
+        overall_average_cycle_days = avg_cycles_df['Average Cycle (days)'].mean()
+        overall_months = int(overall_average_cycle_days // 30)
+        overall_days = int(overall_average_cycle_days % 30)
     else:
         overall_months, overall_days = 0, 0
 
@@ -278,12 +282,7 @@ if not df.empty:
     st.header('Fastest Releasing Companies')
     st.write("This section provides details on the companies with the fastest release cycles. Note: Only companies with more than one model are included in this analysis.")
 
-    # Calculate the average release cycle for each company
-    company_avg_cycles = {company: cycle[0] for company, cycle in company_cycles.items() if cycle[0] is not None}
-    avg_cycles_df = pd.DataFrame(list(company_avg_cycles.items()), columns=['Company', 'Average Cycle (days)'])
-    avg_cycles_df = avg_cycles_df.sort_values(by='Average Cycle (days)')
-
-    # Create the bar chart
+    # Create the bar chart for fastest releasing companies
     fig_fastest = px.bar(avg_cycles_df, x='Company', y='Average Cycle (days)', 
                          title='Fastest Releasing Companies', 
                          labels={'Average Cycle (days)': 'Average Cycle (days)'},
