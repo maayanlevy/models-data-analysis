@@ -31,15 +31,29 @@ df = load_data()
 if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
+
+    # Create sidebar filters
+    st.sidebar.header('Filters')
+    
+    # Filter by company
+    all_companies = df['Organization'].unique()
+    selected_companies = st.sidebar.multiselect('Select companies:', all_companies, default=all_companies)
+    
+    # Filter by date
+    all_dates = sorted(df['Year-Month'].unique())
+    selected_dates = st.sidebar.multiselect('Select dates:', all_dates, default=all_dates)
+    
+    # Apply filters
+    filtered_df = df[df['Organization'].isin(selected_companies) & df['Year-Month'].isin(selected_dates)]
     
     # Create monthly counts by organization
-    monthly_counts = df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
+    monthly_counts = filtered_df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
     
     # Calculate cumulative sums for total available models
     cumulative_counts = monthly_counts.cumsum()
 
     # Create a color map for companies
-    companies = df['Organization'].unique()
+    companies = filtered_df['Organization'].unique()
     color_map = px.colors.qualitative.Plotly + px.colors.qualitative.Set1 + px.colors.qualitative.Pastel
     company_colors = {company: color_map[i % len(color_map)] for i, company in enumerate(companies)}
 
@@ -81,60 +95,65 @@ if not df.empty:
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
                       color_discrete_map=company_colors)
 
-    fig.update_layout(legend_title_text='Company')
+    fig.update_layout(
+        legend=dict(orientation='h', y=-0.2, xanchor='center', x=0.5),
+        hovermode='x unified'
+    )
+    
+    # Update hover information to include the company
+    fig.update_traces(hovertemplate='Company=%{yaxis.title.text}<br>Date=%{x}<br>Models=%{y}')
+
+    # Remove the legend
+    fig.update_layout(showlegend=False)
     
     # Make the graph interactive
     selected_points = plotly_events(fig, click_event=True, hover_event=False)
     
-    # Debug: Display selected points
-    st.write("Selected points:", selected_points)
-
     # Display models for the selected month
     if selected_points:
         selected_month = selected_points[0]['x']
-        st.write("Selected month:", selected_month)  # Debug: Display selected month
 
         # Extract year and month from selected_month
         selected_month_str = pd.to_datetime(selected_month).strftime('%Y-%m')
         
-        if selected_month_str in df['Year-Month'].values:
+        if selected_month_str in filtered_df['Year-Month'].values:
             st.subheader(f"Models released in {selected_month_str}")
-            month_df = df[df['Year-Month'] == selected_month_str]
+            month_df = filtered_df[filtered_df['Year-Month'] == selected_month_str]
             st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
         else:
             st.write(f"No data for the selected month: {selected_month_str}")
 
     # Allow exploration by company
-    company_model_counts = df['Organization'].value_counts()
+    company_model_counts = filtered_df['Organization'].value_counts()
     companies = company_model_counts.index.tolist()
     company_options = [f"{company} ({count} models)" for company, count in zip(companies, company_model_counts)]
     
     selected_company_option = st.selectbox('Select a company:', company_options)
     selected_company = selected_company_option.split(' (')[0]
 
-    company_df = df[df['Organization'] == selected_company]
+    company_df = filtered_df[filtered_df['Organization'] == selected_company]
     st.write(f"Models released by {selected_company}:")
     st.dataframe(company_df[['Model', 'Release Date']])
 
     # Allow exploration by month
-    months = sorted(df['Year-Month'].unique())
+    months = sorted(filtered_df['Year-Month'].unique())
     selected_month = st.selectbox('Select a month:', months)
 
-    month_df = df[df['Year-Month'] == selected_month]
+    month_df = filtered_df[filtered_df['Year-Month'] == selected_month]
     st.write(f"Models released in {selected_month}:")
     st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
 
     # Show raw data
     if st.checkbox('Show raw data'):
         st.subheader('Raw data')
-        st.write(df)
+        st.write(filtered_df)
 
     # Display data quality issues
-    missing_orgs = df['Organization'].isnull().sum()
+    missing_orgs = filtered_df['Organization'].isnull().sum()
     if missing_orgs > 0:
         st.warning(f"There are {missing_orgs} models with missing organization information.")
 
-    missing_dates = df['Release Date'].isnull().sum()
+    missing_dates = filtered_df['Release Date'].isnull().sum()
     if missing_dates > 0:
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
 else:
