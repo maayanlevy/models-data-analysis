@@ -60,13 +60,16 @@ if not df.empty:
     end_date = pd.to_datetime(end_date)
     
     # Apply filters
-    filtered_df = df[df['Organization'].isin(selected_companies) & (df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
+    if selected_companies:
+        filtered_df = df[df['Organization'].isin(selected_companies) & (df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
+    else:
+        filtered_df = df[(df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
     
     # Calculate company-level release cycles
-    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in selected_companies}
+    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in all_companies if calculate_release_cycle(filtered_df, company) is not None}
     
     # Compute overall average release cycle across all selected companies
-    overall_average_cycle = pd.Series([cycle for cycle in company_cycles.values() if cycle is not None]).mean()
+    overall_average_cycle = pd.Series(company_cycles.values()).mean()
 
     # Display overall average release cycle
     st.write(f"**Total average release cycle:** {overall_average_cycle:.2f} months")
@@ -144,6 +147,7 @@ if not df.empty:
         if selected_month_str in filtered_df['Year-Month'].values:
             st.subheader(f"Models released in {selected_month_str}")
             month_df = filtered_df[filtered_df['Year-Month'] == selected_month_str]
+            month_df['Release Date'] = month_df['Release Date'].dt.strftime('%Y-%m')
             st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
         else:
             st.write(f"No data for the selected month: {selected_month_str}")
@@ -157,26 +161,29 @@ if not df.empty:
     selected_company = selected_company_option.split(' (')[0]
 
     company_df = filtered_df[filtered_df['Organization'] == selected_company]
-    st.write(f"Models released by {selected_company}:")
-    st.dataframe(company_df[['Model', 'Release Date']])
-
+    
     # Show company-level release cycle
     company_cycle = company_cycles.get(selected_company)
     if company_cycle:
         st.write(f"**Average release cycle for {selected_company}:** {company_cycle:.2f} months")
-        st.write(f"**Current company-level release cycle:** {company_cycle:.2f} months")
+    
+    st.write(f"Models released by {selected_company}:")
+    company_df['Release Date'] = company_df['Release Date'].dt.strftime('%Y-%m')
+    st.dataframe(company_df[['Model', 'Release Date']])
 
     # Allow exploration by month
     months = sorted(filtered_df['Year-Month'].unique())
     selected_month = st.selectbox('Select a month:', months)
 
     month_df = filtered_df[filtered_df['Year-Month'] == selected_month]
+    month_df['Release Date'] = month_df['Release Date'].dt.strftime('%Y-%m')
     st.write(f"Models released in {selected_month}:")
     st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
 
     # Show raw data
     if st.checkbox('Show raw data'):
         st.subheader('Raw data')
+        filtered_df['Release Date'] = filtered_df['Release Date'].dt.strftime('%Y-%m')
         st.write(filtered_df)
 
     # Display data quality issues
@@ -188,4 +195,4 @@ if not df.empty:
     if missing_dates > 0:
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
 else:
-    st.error("No data available. Please fix the JSON file and restart the app.")
+    st.error("No data available. Please fix the JSON file
