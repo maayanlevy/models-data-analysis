@@ -16,6 +16,7 @@ def load_data():
         df['Release Date'] = pd.to_datetime(df['Release Date'], format='%Y-%m-%d', errors='coerce')
         df = df.dropna(subset=['Release Date'])
         df['Organization'] = df['Organization'].fillna('Unknown')
+        df['Year-Month'] = df['Release Date'].dt.to_period('M').astype(str)
         return df
     except json.JSONDecodeError as e:
         st.error(f"Error parsing JSON file: {str(e)}")
@@ -32,9 +33,6 @@ df = load_data()
 if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
-
-    # Prepare data for graphs
-    df['Year-Month'] = df['Release Date'].dt.to_period('M').astype(str)
     
     # Create monthly counts by organization
     monthly_counts = df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
