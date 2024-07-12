@@ -67,11 +67,13 @@ st.markdown("""
     }
     .release-cycle-company {
         color: #1A73E8;
-        font-weight: bold;
+        font-weight: normal;
+        margin-right: 4px;
     }
     .release-cycle-time {
-        color: #34A853;
-        font-weight: bold;
+        color: #1A73E8;
+        font-weight: normal;
+        margin-left:4px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -238,7 +240,7 @@ if not df.empty:
             st.markdown(f"""
                 <div class="release-cycle">
                     <i class="fa fa-clock-o release-cycle-icon" aria-hidden="true"></i>
-                    <span class="release-cycle-company">{selected_company}</span>: <span class="release-cycle-time">{company_months} months and {company_days} days</span>
+                    <span class="release-cycle-company">{selected_company} </span> <span> Releases a Model Every:</span>  <span class="release-cycle-time"> {company_months} months and {company_days} days</span>
                 </div>
             """, unsafe_allow_html=True)
         
