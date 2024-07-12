@@ -69,11 +69,13 @@ st.markdown("""
     }
     .release-cycle-company {
         color: #1A73E8;
-        font-weight: bold;
+        font-weight: normal;
+        margin-right:4px;
     }
     .release-cycle-time {
-        color: #34A853;
-        font-weight: bold;
+        color: #1A73E8;
+        font-weight: normal;
+        margin-left:4px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -108,17 +110,6 @@ if not df.empty:
         overall_days = int(overall_average_cycle % 30)
     else:
         overall_months, overall_days = 0, 0
-
-    # Display overall average release cycle prominently
-    st.markdown(f"""
-        <div style="background-color: #E8F0FE; margin-bottom: 20px; padding: 20px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 20px; color: #5F6368;">An Average Company Updates Its Model Every</div>
-            <div style="font-size: 40px; color: #1A73E8;">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                <span style="font-weight: bold;"> {overall_months} months </span> <span> {overall_days} days </span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
 
     # Create sidebar preferences
     st.sidebar.header('Preferences')
@@ -229,7 +220,45 @@ if not df.empty:
                 st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
             else:
                 st.write(f"No data for the selected month: {selected_month_str}")
-        
+        # Horizontal line before fastest releasing companies analysis
+        st.markdown('---')
+        st.header('Fastest Releasing Companies')
+        st.write("This section provides details on the companies with the fastest release cycles. Note: Only companies with more than one model are included in this analysis.")
+
+        # Calculate the average release cycle for each company
+        company_avg_cycles = {company: cycle[0] for company, cycle in company_cycles.items() if cycle[0] is not None}
+        avg_cycles_df = pd.DataFrame(list(company_avg_cycles.items()), columns=['Company', 'Average Cycle (days)'])
+        avg_cycles_df = avg_cycles_df.sort_values(by='Average Cycle (days)')
+
+        # Calculate overall average release cycle from avg_cycles_df
+        if not avg_cycles_df.empty:
+            overall_average_cycle_days = avg_cycles_df['Average Cycle (days)'].mean()
+            overall_months = int(overall_average_cycle_days // 30)
+            overall_days = int(overall_average_cycle_days % 30)
+        else:
+            overall_months, overall_days = 0, 0
+
+        # Display overall average release cycle prominently
+        st.markdown(f"""
+            <div style="background-color: #E8F0FE; margin-bottom: 20px; padding: 20px; border-radius: 10px; text-align: center;">
+                <div style="font-size: 20px; color: #5F6368;">An Average Company Updates Its Model Every</div>
+                <div style="font-size: 40px; color: #1A73E8;">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    <span style="font-weight: bold;"> {overall_months} months </span> <span> {overall_days} days </span>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Create the bar chart for fastest releasing companies
+        fig_fastest = px.bar(avg_cycles_df, x='Company', y='Average Cycle (days)', 
+                            title='Fastest Releasing Companies', 
+                            labels={'Average Cycle (days)': 'Average Cycle (days)'},
+                            color='Company', color_discrete_map=company_colors)
+
+        fig_fastest.update_layout(showlegend=False)
+
+        # Display the chart
+        st.plotly_chart(fig_fastest)
         # Horizontal line before per company analysis
         st.markdown('---')
         st.header('Per Company Analysis')
@@ -251,7 +280,7 @@ if not df.empty:
             st.markdown(f"""
                 <div class="release-cycle">
                     <i class="fa fa-clock-o release-cycle-icon" aria-hidden="true"></i>
-                    <span class="release-cycle-company">{selected_company}</span>: <span class="release-cycle-time">{company_months} months and {company_days_remainder} days</span>
+                    <span class="release-cycle-company">{selected_company}</span> <span> releases a new model every  </span> <span class="release-cycle-time"> {company_months} months and {company_days_remainder} days</span>
                 </div>
             """, unsafe_allow_html=True)
         
@@ -272,46 +301,6 @@ if not df.empty:
         month_df['Release Date'] = month_df['Release Date'].dt.strftime('%Y-%m')
         st.write(f"Models released in {selected_month}:")
         st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
-    
-    # Horizontal line before fastest releasing companies analysis
-    st.markdown('---')
-    st.header('Fastest Releasing Companies')
-    st.write("This section provides details on the companies with the fastest release cycles. Note: Only companies with more than one model are included in this analysis.")
-
-    # Calculate the average release cycle for each company
-    company_avg_cycles = {company: cycle[0] for company, cycle in company_cycles.items() if cycle[0] is not None}
-    avg_cycles_df = pd.DataFrame(list(company_avg_cycles.items()), columns=['Company', 'Average Cycle (days)'])
-    avg_cycles_df = avg_cycles_df.sort_values(by='Average Cycle (days)')
-
-    # Calculate overall average release cycle from avg_cycles_df
-    if not avg_cycles_df.empty:
-        overall_average_cycle_days = avg_cycles_df['Average Cycle (days)'].mean()
-        overall_months = int(overall_average_cycle_days // 30)
-        overall_days = int(overall_average_cycle_days % 30)
-    else:
-        overall_months, overall_days = 0, 0
-
-    # Display overall average release cycle prominently
-    st.markdown(f"""
-        <div style="background-color: #E8F0FE; margin-bottom: 20px; padding: 20px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 20px; color: #5F6368;">An Average Company Updates Its Model Every</div>
-            <div style="font-size: 40px; color: #1A73E8;">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                <span style="font-weight: bold;"> {overall_months} months </span> <span> {overall_days} days </span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # Create the bar chart for fastest releasing companies
-    fig_fastest = px.bar(avg_cycles_df, x='Company', y='Average Cycle (days)', 
-                         title='Fastest Releasing Companies', 
-                         labels={'Average Cycle (days)': 'Average Cycle (days)'},
-                         color='Company', color_discrete_map=company_colors)
-
-    fig_fastest.update_layout(showlegend=False)
-
-    # Display the chart
-    st.plotly_chart(fig_fastest)
 
     # Display data quality issues
     missing_orgs = df['Organization'].isnull().sum()
