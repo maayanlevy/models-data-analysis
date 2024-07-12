@@ -40,8 +40,14 @@ if not df.empty:
                  labels={'Year-Month': 'Month', 'Count': 'Number of Releases'})
     st.plotly_chart(fig)
 
+    # Handle None values in the 'Organization' column
+    df['Organization'] = df['Organization'].fillna('Unknown')
+    
     # Allow exploration by company
     companies = sorted(df['Organization'].unique())
+    if 'Unknown' in companies:
+        st.warning("Some models have unknown organizations. These will be listed as 'Unknown'.")
+    
     selected_company = st.selectbox('Select a company:', companies)
 
     company_df = df[df['Organization'] == selected_company]
@@ -62,3 +68,13 @@ if not df.empty:
         st.write(df)
 else:
     st.error("No data available. Please fix the JSON file and restart the app.")
+
+# Display data quality issues
+if not df.empty:
+    missing_orgs = df['Organization'].isnull().sum()
+    if missing_orgs > 0:
+        st.warning(f"There are {missing_orgs} models with missing organization information.")
+
+    missing_dates = df['Release Date'].isnull().sum()
+    if missing_dates > 0:
+        st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
