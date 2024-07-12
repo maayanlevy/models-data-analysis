@@ -1,0 +1,887 @@
+[
+    {
+      "Model": "GPT-4o-2024-05-13",
+      "Organization": "OpenAI",
+      "Release Date": "2024-05-13"
+    },
+    {
+      "Model": "Claude 3.5 Sonnet",
+      "Organization": "Anthropic",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Gemini-Advanced-0514",
+      "Organization": "Google",
+      "Release Date": "2024-05-14"
+    },
+    {
+      "Model": "Gemini-1.5-Pro-API-0514",
+      "Organization": "Google",
+      "Release Date": "2024-05-14"
+    },
+    {
+      "Model": "Gemini-1.5-Pro-API-0409-Preview",
+      "Organization": "Google",
+      "Release Date": "2024-04-09"
+    },
+    {
+      "Model": "GPT-4-Turbo-2024-04-09",
+      "Organization": "OpenAI",
+      "Release Date": "2024-04-09"
+    },
+    {
+      "Model": "GPT-4-1106-preview",
+      "Organization": "OpenAI",
+      "Release Date": "2023-11-06"
+    },
+    {
+      "Model": "Claude 3 Opus",
+      "Organization": "Anthropic",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "GPT-4-0125-preview",
+      "Organization": "OpenAI",
+      "Release Date": "2024-01-25"
+    },
+    {
+      "Model": "Yi-Large-preview",
+      "Organization": "01 AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Gemini-1.5-Flash-API-0514",
+      "Organization": "Google",
+      "Release Date": "2024-05-14"
+    },
+    {
+      "Model": "Gemma-2-27B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Yi-Large",
+      "Organization": "01 AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Bard (Gemini Pro)",
+      "Organization": "Google",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Nemotron-4-340B-Instruct",
+      "Organization": "Nvidia",
+      "Release Date": null
+    },
+    {
+      "Model": "GLM-4-0520",
+      "Organization": "Zhipu AI",
+      "Release Date": "2024-05-20"
+    },
+    {
+      "Model": "Llama-3-70b-Instruct",
+      "Organization": "Meta",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Claude 3 Sonnet",
+      "Organization": "Anthropic",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Reka-Core-20240501",
+      "Organization": "Reka AI",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "Command R+",
+      "Organization": "Cohere",
+      "Release Date": null
+    },
+    {
+      "Model": "Qwen2-72B-Instruct",
+      "Organization": "Alibaba",
+      "Release Date": null
+    },
+    {
+      "Model": "GPT-4-0314",
+      "Organization": "OpenAI",
+      "Release Date": "2023-03-14"
+    },
+    {
+      "Model": "Gemma-2-9B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Qwen-Max-0428",
+      "Organization": "Alibaba",
+      "Release Date": "2024-04-28"
+    },
+    {
+      "Model": "GLM-4-0116",
+      "Organization": "Zhipu AI",
+      "Release Date": "2024-01-16"
+    },
+    {
+      "Model": "DeepSeek-Coder-V2-Instruct",
+      "Organization": "DeepSeek AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Claude 3 Haiku",
+      "Organization": "Anthropic",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Reka-Flash-Preview-20240611",
+      "Organization": "Reka AI",
+      "Release Date": "2024-06-11"
+    },
+    {
+      "Model": "Qwen1.5-110B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "GPT-4-0613",
+      "Organization": "OpenAI",
+      "Release Date": "2023-06-13"
+    },
+    {
+      "Model": "Yi-1.5-34B-Chat",
+      "Organization": "01 AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Mistral-Large-2402",
+      "Organization": "Mistral",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Reka-Flash-21B-online",
+      "Organization": "Reka AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Llama-3-8b-Instruct",
+      "Organization": "Meta",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Claude-1",
+      "Organization": "Anthropic",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "Mistral Medium",
+      "Organization": "Mistral",
+      "Release Date": null
+    },
+    {
+      "Model": "Command R",
+      "Organization": "Cohere",
+      "Release Date": null
+    },
+    {
+      "Model": "Reka-Flash-21B",
+      "Organization": "Reka AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Qwen1.5-72B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Mixtral-8x22b-Instruct-v0.1",
+      "Organization": "Mistral",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Claude-2.0",
+      "Organization": "Anthropic",
+      "Release Date": "2023-07-01"
+    },
+    {
+      "Model": "Gemini Pro (Dev API)",
+      "Organization": "Google",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Zephyr-ORPO-141b-A35b-v0.1",
+      "Organization": "HuggingFace",
+      "Release Date": null
+    },
+    {
+      "Model": "Qwen1.5-32B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Mistral-Next",
+      "Organization": "Mistral",
+      "Release Date": null
+    },
+    {
+      "Model": "Phi-3-Medium-4k-Instruct",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "Starling-LM-7B-beta",
+      "Organization": "Nexusflow",
+      "Release Date": null
+    },
+    {
+      "Model": "Claude-2.1",
+      "Organization": "Anthropic",
+      "Release Date": "2023-11-01"
+    },
+    {
+      "Model": "GPT-3.5-Turbo-0613",
+      "Organization": "OpenAI",
+      "Release Date": "2023-06-13"
+    },
+    {
+      "Model": "Yi-34B-Chat",
+      "Organization": "01 AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Claude-Instant-1",
+      "Organization": "Anthropic",
+      "Release Date": "2023-07-01"
+    },
+    {
+      "Model": "Gemini Pro",
+      "Organization": "Google",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Mixtral-8x7b-Instruct-v0.1",
+      "Organization": "Mistral",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "GPT-3.5-Turbo-0314",
+      "Organization": "OpenAI",
+      "Release Date": "2023-03-14"
+    },
+    {
+      "Model": "Qwen1.5-14B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "WizardLM-70B-v1.0",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "GPT-3.5-Turbo-0125",
+      "Organization": "OpenAI",
+      "Release Date": "2024-01-25"
+    },
+    {
+      "Model": "DBRX-Instruct-Preview",
+      "Organization": "Databricks",
+      "Release Date": null
+    },
+    {
+      "Model": "Phi-3-Small-8k-Instruct",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "Tulu-2-DPO-70B",
+      "Organization": "AllenAI/UW",
+      "Release Date": null
+    },
+    {
+      "Model": "OpenChat-3.5-0106",
+      "Organization": "OpenChat",
+      "Release Date": "2024-01-06"
+    },
+    {
+      "Model": "Llama-2-70b-chat",
+      "Organization": "Meta",
+      "Release Date": "2023-07-01"
+    },
+    {
+      "Model": "Vicuna-33B",
+      "Organization": "LMSYS",
+      "Release Date": null
+    },
+    {
+      "Model": "Snowflake Arctic Instruct",
+      "Organization": "Snowflake",
+      "Release Date": null
+    },
+    {
+      "Model": "Starling-LM-7B-alpha",
+      "Organization": "UC Berkeley",
+      "Release Date": null
+    },
+    {
+      "Model": "Nous-Hermes-2-Mixtral-8x7B-DPO",
+      "Organization": "NousResearch",
+      "Release Date": null
+    },
+    {
+      "Model": "NV-Llama2-70B-SteerLM-Chat",
+      "Organization": "Nvidia",
+      "Release Date": null
+    },
+    {
+      "Model": "Gemma-1.1-7B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "pplx-70b-online",
+      "Organization": "Perplexity AI",
+      "Release Date": null
+    },
+    {
+      "Model": "DeepSeek-LLM-67B-Chat",
+      "Organization": "DeepSeek AI",
+      "Release Date": null
+    },
+    {
+      "Model": "OpenChat-3.5",
+      "Organization": "OpenChat",
+      "Release Date": null
+    },
+    {
+      "Model": "OpenHermes-2.5-Mistral-7b",
+      "Organization": "NousResearch",
+      "Release Date": null
+    },
+    {
+      "Model": "Mistral-7B-Instruct-v0.2",
+      "Organization": "Mistral",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Qwen1.5-7B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "GPT-3.5-Turbo-1106",
+      "Organization": "OpenAI",
+      "Release Date": "2023-11-06"
+    },
+    {
+      "Model": "Dolphin-2.2.1-Mistral-7B",
+      "Organization": "Cognitive Computations",
+      "Release Date": null
+    },
+    {
+      "Model": "Phi-3-Mini-4k-Instruct",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "SOLAR-10.7B-Instruct-v1.0",
+      "Organization": "Upstage AI",
+      "Release Date": null
+    },
+    {
+      "Model": "Llama-2-13b-chat",
+      "Organization": "Meta",
+      "Release Date": "2023-07-01"
+    },
+    {
+      "Model": "WizardLM-13b-v1.2",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "Phi-3-Mini-4k-Instruct-June-24",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "Zephyr-7b-beta",
+      "Organization": "HuggingFace",
+      "Release Date": null
+    },
+    {
+      "Model": "CodeLlama-70B-instruct",
+      "Organization": "Meta",
+      "Release Date": "2023-08-01"
+    },
+    {
+      "Model": "MPT-30B-chat",
+      "Organization": "MosaicML",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "Zephyr-7b-alpha",
+      "Organization": "HuggingFace",
+      "Release Date": null
+    },
+    {
+      "Model": "falcon-180b-chat",
+      "Organization": "TII",
+      "Release Date": null
+    },
+    {
+      "Model": "pplx-7b-online",
+      "Organization": "Perplexity AI",
+      "Release Date": null
+    },
+    {
+      "Model": "CodeLlama-34B-instruct",
+      "Organization": "Meta",
+      "Release Date": "2023-08-01"
+    },
+    {
+      "Model": "Vicuna-13B",
+      "Organization": "LMSYS",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "Gemma-7B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Llama-2-7b-chat",
+      "Organization": "Meta",
+      "Release Date": "2023-07-01"
+    },
+    {
+      "Model": "Phi-3-Mini-128k-Instruct",
+      "Organization": "Microsoft",
+      "Release Date": null
+    },
+    {
+      "Model": "Qwen-14B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": null
+    },
+    {
+      "Model": "Guanaco-33B",
+      "Organization": "UW",
+      "Release Date": null
+    },
+    {
+      "Model": "Gemma-1.1-2B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "StripedHyena-Nous-7B",
+      "Organization": "Together AI",
+      "Release Date": null
+    },
+    {
+      "Model": "OLMo-7B-instruct",
+      "Organization": "Allen AI",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Mistral-7B-Instruct-v0.1",
+      "Organization": "Mistral",
+      "Release Date": "2023-09-01"
+    },
+    {
+      "Model": "Vicuna-7B",
+      "Organization": "LMSYS",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "PaLM-Chat-Bison-001",
+      "Organization": "Google",
+      "Release Date": null
+    },
+    {
+      "Model": "Qwen1.5-4B-Chat",
+      "Organization": "Alibaba",
+      "Release Date": null
+    },
+    {
+      "Model": "Gemma-2B-it",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Koala-13B",
+      "Organization": "UC Berkeley",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "ChatGLM3-6B",
+      "Organization": "Tsinghua",
+      "Release Date": null
+    },
+    {
+      "Model": "GPT4All-13B-Snoozy",
+      "Organization": "Nomic AI",
+      "Release Date": null
+    },
+    {
+      "Model": "MPT-7B-Chat",
+      "Organization": "MosaicML",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "ChatGLM2-6B",
+      "Organization": "Tsinghua",
+      "Release Date": "2023-06-01"
+    },
+    {
+      "Model": "RWKV-4-Raven-14B",
+      "Organization": "RWKV",
+      "Release Date": null
+    },
+    {
+      "Model": "Alpaca-13B",
+      "Organization": "Stanford",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "OpenAssistant-Pythia-12B",
+      "Organization": "OpenAssistant",
+      "Release Date": null
+    },
+    {
+      "Model": "ChatGLM-6B",
+      "Organization": "Tsinghua",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "FastChat-T5-3B",
+      "Organization": "LMSYS",
+      "Release Date": null
+    },
+    {
+      "Model": "StableLM-Tuned-Alpha-7B",
+      "Organization": "Stability AI",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "Dolly-V2-12B",
+      "Organization": "Databricks",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "LLaMA-13B",
+      "Organization": "Meta",
+      "Release Date": "2023-02-01"
+    },
+    {
+      "Model": "T5",
+      "Organization": "Google",
+      "Release Date": "2019-10-01"
+    },
+    {
+      "Model": "RWKV 4",
+      "Organization": null,
+      "Release Date": "2021-08-01"
+    },
+    {
+      "Model": "GPT-NeoX-20B",
+      "Organization": null,
+      "Release Date": "2022-04-01"
+    },
+    {
+      "Model": "YaLM-100B",
+      "Organization": "Yandex",
+      "Release Date": "2022-06-01"
+    },
+    {
+      "Model": "UL2",
+      "Organization": "Google",
+      "Release Date": "2022-10-01"
+    },
+    {
+      "Model": "Bloom",
+      "Organization": null,
+      "Release Date": "2022-11-01"
+    },
+    {
+      "Model": "ChatGLM",
+      "Organization": "Zhipu AI",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "Cerebras-GPT",
+      "Organization": "Cerebras",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "Open Assistant (Pythia family)",
+      "Organization": "LAION",
+      "Release Date": "2023-03-01"
+    },
+    {
+      "Model": "Pythia",
+      "Organization": "EleutherAI",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "Dolly",
+      "Organization": "Databricks",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "StableLM-Alpha",
+      "Organization": "Stability AI",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "FastChat-T5",
+      "Organization": "LMSYS",
+      "Release Date": "2023-04-01"
+    },
+    {
+      "Model": "DLite",
+      "Organization": null,
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "h2oGPT",
+      "Organization": "H2O.ai",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "MPT-7B",
+      "Organization": "MosaicML",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "RedPajama-INCITE",
+      "Organization": "Together",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "OpenLLaMA",
+      "Organization": "Berkeley AI Research",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "Falcon",
+      "Organization": "TII",
+      "Release Date": "2023-05-01"
+    },
+    {
+      "Model": "GPT-J-6B",
+      "Organization": null,
+      "Release Date": "2023-06-01"
+    },
+    {
+      "Model": "MPT-30B",
+      "Organization": "MosaicML",
+      "Release Date": "2023-06-01"
+    },
+    {
+      "Model": "ChatGLM2",
+      "Organization": "Zhipu AI",
+      "Release Date": "2023-06-01"
+    },
+    {
+      "Model": "XGen-7B",
+      "Organization": "Salesforce AI Research",
+      "Release Date": "2023-06-01"
+    },
+    {
+      "Model": "Jais-13b",
+      "Organization": "King Abdullah University of Science and Technology",
+      "Release Date": "2023-08-01"
+    },
+    {
+      "Model": "OpenHermes",
+      "Organization": "Nous Research",
+      "Release Date": "2023-09-01"
+    },
+    {
+      "Model": "OpenLM",
+      "Organization": "Google",
+      "Release Date": "2023-09-01"
+    },
+    {
+      "Model": "Mistral 7B",
+      "Organization": "Mistral AI",
+      "Release Date": "2023-09-01"
+    },
+    {
+      "Model": "ChatGLM3",
+      "Organization": "Zhipu AI",
+      "Release Date": "2023-10-01"
+    },
+    {
+      "Model": "Skywork",
+      "Organization": "Qianyan AI",
+      "Release Date": "2023-10-01"
+    },
+    {
+      "Model": "Jais-30b",
+      "Organization": "King Abdullah University of Science and Technology",
+      "Release Date": "2023-11-01"
+    },
+    {
+      "Model": "Zephyr",
+      "Organization": "Hugging Face",
+      "Release Date": "2023-11-01"
+    },
+    {
+      "Model": "DeepSeek",
+      "Organization": "DeepSeek AI",
+      "Release Date": "2023-11-01"
+    },
+    {
+      "Model": "Mistral 7B v0.2",
+      "Organization": "Mistral AI",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "Mixtral 8x7B v0.1",
+      "Organization": "Mistral AI",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "LLM360 Amber",
+      "Organization": "Together",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "SOLAR",
+      "Organization": "Upstage",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "phi-2",
+      "Organization": "Microsoft",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "FLOR",
+      "Organization": "Barcelona Supercomputing Center",
+      "Release Date": "2023-12-01"
+    },
+    {
+      "Model": "RWKV 5 v2",
+      "Organization": null,
+      "Release Date": "2024-01-01"
+    },
+    {
+      "Model": "OLMo",
+      "Organization": "AI2",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Qwen1.5",
+      "Organization": "Alibaba Cloud",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "LWM",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Jais-30b v3",
+      "Organization": "King Abdullah University of Science and Technology",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Gemma",
+      "Organization": "Google",
+      "Release Date": "2024-02-01"
+    },
+    {
+      "Model": "Grok-1",
+      "Organization": "xAI",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Qwen1.5 MoE",
+      "Organization": "Alibaba Cloud",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Jamba 0.1",
+      "Organization": "AI21 Labs",
+      "Release Date": "2024-03-01"
+    },
+    {
+      "Model": "Qwen1.5 32B",
+      "Organization": "Alibaba Cloud",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Mamba-7B",
+      "Organization": "Toyota Technological Institute at Chicago",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Mixtral8x22B v0.1",
+      "Organization": "Mistral AI",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Llama 3",
+      "Organization": "Meta",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Phi-3 Mini",
+      "Organization": "Microsoft",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "OpenELM",
+      "Organization": "BAAI",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Snowflake Arctic",
+      "Organization": "Snowflake",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "Qwen1.5 110B",
+      "Organization": "Alibaba Cloud",
+      "Release Date": "2024-04-01"
+    },
+    {
+      "Model": "RWKV 6 v2.1",
+      "Organization": null,
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "DeepSeek-V2",
+      "Organization": "DeepSeek AI",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "Fugaku-LLM",
+      "Organization": "RIKEN Center for Computational Science",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "Falcon 2",
+      "Organization": "TII",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "Yi-1.5",
+      "Organization": "01 AI",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "DeepSeek-V2-Lite",
+      "Organization": "DeepSeek AI",
+      "Release Date": "2024-05-01"
+    },
+    {
+      "Model": "Phi-3 small/medium",
+      "Organization": "Microsoft",
+      "Release Date": "2024-05-01"
+    }
+  ]
