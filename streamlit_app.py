@@ -37,6 +37,16 @@ def calculate_release_cycle(df, company):
 
 df = load_data()
 
+# Custom CSS to widen the container
+st.markdown("""
+    <style>
+    .block-container {
+        max-width: 1200px;
+        padding: 1rem 2rem;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Only proceed if we have data
 if not df.empty:
     # Add image at the top
@@ -59,18 +69,28 @@ if not df.empty:
 
     # Display overall average release cycle prominently
     st.markdown(f"""
-        <div style="background-color: #E8F0FE; margin: 20px; padding: 5px; border-radius: 10px; text-align: center;">
-            <div style="font-size: 20px; color: #5F6368;">Total average release cycle</div>
-            <div style="font-size: 40px; font-weight: bold; color: #1A73E8;">
+        <div style="background-color: #E8F0FE; margin-bottom: 20px; padding: 20px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 20px; color: #5F6368;">An Average Company Updates Its Model Every</div>
+            <div style="font-size: 40px; color: #1A73E8;">
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
-                {overall_months} months {overall_days} days
+                <span style="font-weight: bold;"> {overall_months} months </span> <span> {overall_days} days </span>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
     # Create sidebar filters
     st.sidebar.header('Filters')
-    
+
+    # Move "Select data type" and "Select graph type" to the top of the left panel
+    data_type = st.sidebar.radio(
+        "Select data type:",
+        ("Number of Available Models", "Newly Released Models per Month")
+    )
+    graph_type = st.sidebar.radio(
+        "Select graph type:",
+        ("Stacked Area", "Line (Total)")
+    )
+
     # Filter by company
     all_companies = df['Organization'].unique()
     selected_companies = st.sidebar.multiselect('Select companies:', all_companies, default=all_companies)
@@ -101,19 +121,7 @@ if not df.empty:
     color_map = px.colors.qualitative.Plotly + px.colors.qualitative.Set1 + px.colors.qualitative.Pastel
     company_colors = {company: color_map[i % len(color_map)] for i, company in enumerate(companies)}
 
-    # Add options to switch between new releases and total available models, and graph types
-    col1, col2 = st.columns(2)
-    with col1:
-        data_type = st.radio(
-            "Select data type:",
-            ("Number of Available Models", "Newly Released Models per Month")
-        )
-    with col2:
-        graph_type = st.radio(
-            "Select graph type:",
-            ("Stacked Area", "Line (Total)")
-        )
-
+    # Create the selected graph
     if data_type == "Number of Available Models":
         plot_data = cumulative_counts
         title_prefix = 'Total Number of Available LLM Models'
@@ -121,12 +129,14 @@ if not df.empty:
         plot_data = monthly_counts
         title_prefix = 'Newly Released LLM Models per Month'
 
-    # Create the selected graph
     if graph_type == "Stacked Area":
         fig = px.area(plot_data, x=plot_data.index, y=plot_data.columns, 
                       title=f'{title_prefix} by Company (Stacked Area)',
                       labels={'value': 'Number of Models', 'Year-Month': 'Month'},
                       color_discrete_map=company_colors)
+        for trace in fig.data:
+            trace.hovertemplate = "%{customdata[0]}, %{x} (%{y} models)"
+            trace.customdata = list(zip(trace.name for _ in range(len(trace.x))))
     elif graph_type == "Line (Total)":
         plot_data_total = plot_data.sum(axis=1)
         fig = px.line(x=plot_data_total.index, y=plot_data_total.values,
@@ -141,7 +151,12 @@ if not df.empty:
     )
     
     # Update hover information to include the company
-    fig.update_traces(hovertemplate='Company=%{name}<br>Date=%{x}<br>Models=%{y}')
+    if graph_type == "Stacked Area":
+        for trace in fig.data:
+            trace.hovertemplate = "%{customdata[0]}, %{x} (%{y} models)"
+            trace.customdata = [[trace.name] for _ in range(len(trace.x))]
+    else:
+        fig.update_traces(hovertemplate="%{x} (%{y} models)")
 
     # Remove the legend
     fig.update_layout(showlegend=False)
@@ -214,7 +229,7 @@ if not df.empty:
         st.warning(f"There are {missing_orgs} models with missing organization information.")
 
     missing_dates = filtered_df['Release Date'].isnull().sum()
-    if missing_dates > 0:
+    if missing_dates > 0):
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
 else:
     st.error("No data available. Please fix the JSON file and restart the app.")
