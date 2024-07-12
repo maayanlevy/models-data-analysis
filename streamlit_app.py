@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
-from datetime import datetime
 import json
 from streamlit_plotly_events import plotly_events
 
@@ -87,13 +85,24 @@ if not df.empty:
     
     # Make the graph interactive
     selected_points = plotly_events(fig, click_event=True, hover_event=False)
+    
+    # Debug: Display selected points
+    st.write("Selected points:", selected_points)
 
     # Display models for the selected month
     if selected_points:
         selected_month = selected_points[0]['x']
-        st.subheader(f"Models released in {selected_month}")
-        month_df = df[df['Year-Month'] == selected_month]
-        st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
+        st.write("Selected month:", selected_month)  # Debug: Display selected month
+
+        # Extract year and month from selected_month
+        selected_month_str = pd.to_datetime(selected_month).strftime('%Y-%m')
+        
+        if selected_month_str in df['Year-Month'].values:
+            st.subheader(f"Models released in {selected_month_str}")
+            month_df = df[df['Year-Month'] == selected_month_str]
+            st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
+        else:
+            st.write(f"No data for the selected month: {selected_month_str}")
 
     # Allow exploration by company
     company_model_counts = df['Organization'].value_counts()
