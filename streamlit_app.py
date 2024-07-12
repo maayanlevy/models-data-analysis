@@ -59,7 +59,7 @@ if not df.empty:
 
     # Display overall average release cycle prominently
     st.markdown(f"""
-        <div style="background-color: #E8F0FE; padding: 20px; border-radius: 10px; text-align: center;">
+        <div style="background-color: #E8F0FE; margin: 20px; border-radius: 10px; text-align: center;">
             <div style="font-size: 20px; color: #5F6368;">Total average release cycle</div>
             <div style="font-size: 40px; font-weight: bold; color: #1A73E8;">
                 <i class="fa fa-clock-o" aria-hidden="true"></i>
