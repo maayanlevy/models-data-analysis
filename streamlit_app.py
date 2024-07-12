@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import json
 from streamlit_plotly_events import plotly_events
 
@@ -46,6 +45,21 @@ if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
 
+    # Calculate company-level release cycles
+    company_cycles = {company: calculate_release_cycle(df, company) for company in df['Organization'].unique()}
+    
+    # Compute overall average release cycle across all companies
+    average_cycles = [pd.Timedelta(days=months * 30 + days) for months, days in company_cycles.values() if months is not None]
+    if average_cycles:
+        overall_average_cycle = sum(average_cycles, pd.Timedelta(0)) / len(average_cycles)
+        overall_months = overall_average_cycle.days // 30
+        overall_days = overall_average_cycle.days % 30
+    else:
+        overall_months, overall_days = 0, 0
+
+    # Display overall average release cycle prominently
+    st.markdown(f"<h2 style='text-align: center; color: black;'>Total average release cycle: {overall_months} months and {overall_days} days</h2>", unsafe_allow_html=True)
+
     # Create sidebar filters
     st.sidebar.header('Filters')
     
@@ -68,21 +82,6 @@ if not df.empty:
     else:
         filtered_df = df[(df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
     
-    # Calculate company-level release cycles
-    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in all_companies}
-    
-    # Compute overall average release cycle across all selected companies
-    average_cycles = [pd.Timedelta(days=months * 30 + days) for months, days in company_cycles.values() if months is not None]
-    if average_cycles:
-        overall_average_cycle = sum(average_cycles, pd.Timedelta(0)) / len(average_cycles)
-        overall_months = overall_average_cycle.days // 30
-        overall_days = overall_average_cycle.days % 30
-    else:
-        overall_months, overall_days = 0, 0
-
-    # Display overall average release cycle
-    st.write(f"**Total average release cycle:** {overall_months} months and {overall_days} days")
-    
     # Create monthly counts by organization
     monthly_counts = filtered_df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
     
@@ -104,7 +103,7 @@ if not df.empty:
     with col2:
         graph_type = st.radio(
             "Select graph type:",
-            ("Stacked Area", "Line (Total)", "Line (Stacked)")
+            ("Stacked Area", "Line (Total)")
         )
 
     if data_type == "Number of Available Models":
@@ -126,23 +125,6 @@ if not df.empty:
                       title=f'{title_prefix} (Total)',
                       labels={'x': 'Month', 'y': 'Number of Models'},
                       )
-    else:  # Line (Stacked)
-        fig = go.Figure()
-        stacked_data = plot_data.copy()
-        for company in stacked_data.columns:
-            fig.add_trace(go.Scatter(
-                x=stacked_data.index,
-                y=stacked_data[company],
-                mode='lines',
-                name=company,
-                stackgroup='one'  # This makes the lines stack
-            ))
-        fig.update_layout(
-            title=f'{title_prefix} by Company (Stacked Line)',
-            xaxis_title='Month',
-            yaxis_title='Number of Models',
-            hovermode='x unified'
-        )
 
     fig.update_layout(
         legend=dict(orientation='h', y=-0.2, xanchor='center', x=0.5),
