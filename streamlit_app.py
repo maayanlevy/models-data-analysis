@@ -29,9 +29,11 @@ def calculate_release_cycle(df, company):
     release_dates = df[df['Organization'] == company]['Release Date'].sort_values()
     if len(release_dates) > 1:
         time_deltas = release_dates.diff().dropna()
-        average_cycle = time_deltas.mean() / pd.Timedelta(days=30)
-        return average_cycle
-    return None
+        average_cycle = time_deltas.mean()
+        months = average_cycle.days // 30
+        days = average_cycle.days % 30
+        return months, days
+    return None, None
 
 df = load_data()
 
@@ -66,13 +68,19 @@ if not df.empty:
         filtered_df = df[(df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
     
     # Calculate company-level release cycles
-    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in all_companies if calculate_release_cycle(filtered_df, company) is not None}
+    company_cycles = {company: calculate_release_cycle(filtered_df, company) for company in all_companies}
     
     # Compute overall average release cycle across all selected companies
-    overall_average_cycle = pd.Series(company_cycles.values()).mean()
+    average_cycles = [pd.Timedelta(days=months * 30 + days) for months, days in company_cycles.values() if months is not None]
+    if average_cycles:
+        overall_average_cycle = sum(average_cycles, pd.Timedelta(0)) / len(average_cycles)
+        overall_months = overall_average_cycle.days // 30
+        overall_days = overall_average_cycle.days % 30
+    else:
+        overall_months, overall_days = 0, 0
 
     # Display overall average release cycle
-    st.write(f"**Total average release cycle:** {overall_average_cycle:.2f} months")
+    st.write(f"**Total average release cycle:** {overall_months} months and {overall_days} days")
     
     # Create monthly counts by organization
     monthly_counts = filtered_df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
@@ -163,9 +171,9 @@ if not df.empty:
     company_df = filtered_df[filtered_df['Organization'] == selected_company]
     
     # Show company-level release cycle
-    company_cycle = company_cycles.get(selected_company)
-    if company_cycle:
-        st.write(f"**Average release cycle for {selected_company}:** {company_cycle:.2f} months")
+    company_months, company_days = company_cycles.get(selected_company, (None, None))
+    if company_months is not None:
+        st.write(f"**Average release cycle for {selected_company}:** {company_months} months and {company_days} days")
     
     st.write(f"Models released by {selected_company}:")
     company_df['Release Date'] = company_df['Release Date'].dt.strftime('%Y-%m')
@@ -195,4 +203,4 @@ if not df.empty:
     if missing_dates > 0:
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
 else:
-    st.error("No data available. Please fix the JSON file
+    st.error("No data available. Please fix the JSON file and restart the app.")
