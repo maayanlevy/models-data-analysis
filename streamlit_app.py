@@ -25,15 +25,17 @@ def load_data():
         st.code("".join(lines[max(0, e.lineno-3):e.lineno+2]), language="json")
         return pd.DataFrame()
 
-def calculate_release_cycle(df, company):
-    release_dates = df[df['Organization'] == company]['Release Date'].sort_values()
-    if len(release_dates) > 1:
-        time_deltas = release_dates.diff().dropna()
-        average_cycle = time_deltas.mean()
-        months = average_cycle.days // 30
-        days = average_cycle.days % 30
-        return months, days
-    return None, None
+def calculate_release_cycle(df, company, last_release_date):
+    company_df = df[df['Organization'] == company]
+    first_release_date = company_df['Release Date'].min()
+    num_models = company_df.shape[0]
+    if num_models > 1:
+        total_days = (last_release_date - first_release_date).days
+        average_cycle = total_days / num_models
+        months = int(average_cycle // 30)
+        days = int(average_cycle % 30)
+        return average_cycle, months, days
+    return None, None, None
 
 df = load_data()
 
@@ -67,13 +69,11 @@ st.markdown("""
     }
     .release-cycle-company {
         color: #1A73E8;
-        font-weight: normal;
-        margin-right: 4px;
+        font-weight: bold;
     }
     .release-cycle-time {
-        color: #1A73E8;
-        font-weight: normal;
-        margin-left:4px;
+        color: #34A853;
+        font-weight: bold;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -86,15 +86,26 @@ if not df.empty:
     # Set up the Streamlit app
     st.title('LLM Release Explorer')
 
+    # Filter out companies with only one model
+    companies_with_multiple_models = df['Organization'].value_counts()
+    companies_with_multiple_models = companies_with_multiple_models[companies_with_multiple_models > 1].index.tolist()
+    df = df[df['Organization'].isin(companies_with_multiple_models)]
+
+    # Calculate the overall last release date for all companies
+    last_release_date = df['Release Date'].max()
+
+    # Display last update note
+    st.markdown(f"**Last update:** {last_release_date.strftime('%Y-%m-%d')}")
+
     # Calculate company-level release cycles
-    company_cycles = {company: calculate_release_cycle(df, company) for company in df['Organization'].unique()}
+    company_cycles = {company: calculate_release_cycle(df, company, last_release_date) for company in df['Organization'].unique()}
     
     # Compute overall average release cycle across all companies
-    average_cycles = [pd.Timedelta(days=months * 30 + days) for months, days in company_cycles.values() if months is not None]
+    average_cycles = [days for days, months, days in company_cycles.values() if days is not None]
     if average_cycles:
-        overall_average_cycle = sum(average_cycles, pd.Timedelta(0)) / len(average_cycles)
-        overall_months = overall_average_cycle.days // 30
-        overall_days = overall_average_cycle.days % 30
+        overall_average_cycle = sum(average_cycles) / len(average_cycles)
+        overall_months = int(overall_average_cycle // 30)
+        overall_days = int(overall_average_cycle % 30)
     else:
         overall_months, overall_days = 0, 0
 
@@ -235,12 +246,12 @@ if not df.empty:
         company_df = filtered_df[filtered_df['Organization'] == selected_company]
         
         # Show company-level release cycle
-        company_months, company_days = company_cycles.get(selected_company, (None, None))
+        company_days, company_months, company_days_remainder = company_cycles.get(selected_company, (None, None, None))
         if company_months is not None:
             st.markdown(f"""
                 <div class="release-cycle">
                     <i class="fa fa-clock-o release-cycle-icon" aria-hidden="true"></i>
-                    <span class="release-cycle-company">{selected_company} </span> <span> Releases a Model Every:</span>  <span class="release-cycle-time"> {company_months} months and {company_days} days</span>
+                    <span class="release-cycle-company">{selected_company}</span>: <span class="release-cycle-time">{company_months} months and {company_days_remainder} days</span>
                 </div>
             """, unsafe_allow_html=True)
         
@@ -261,13 +272,34 @@ if not df.empty:
         month_df['Release Date'] = month_df['Release Date'].dt.strftime('%Y-%m')
         st.write(f"Models released in {selected_month}:")
         st.dataframe(month_df[['Model', 'Organization', 'Release Date']])
+    
+    # Horizontal line before fastest releasing companies analysis
+    st.markdown('---')
+    st.header('Fastest Releasing Companies')
+    st.write("This section provides details on the companies with the fastest release cycles. Note: Only companies with more than one model are included in this analysis.")
+
+    # Calculate the average release cycle for each company
+    company_avg_cycles = {company: cycle[0] for company, cycle in company_cycles.items() if cycle[0] is not None}
+    avg_cycles_df = pd.DataFrame(list(company_avg_cycles.items()), columns=['Company', 'Average Cycle (days)'])
+    avg_cycles_df = avg_cycles_df.sort_values(by='Average Cycle (days)')
+
+    # Create the bar chart
+    fig_fastest = px.bar(avg_cycles_df, x='Company', y='Average Cycle (days)', 
+                         title='Fastest Releasing Companies', 
+                         labels={'Average Cycle (days)': 'Average Cycle (days)'},
+                         color='Company', color_discrete_map=company_colors)
+
+    fig_fastest.update_layout(showlegend=False)
+
+    # Display the chart
+    st.plotly_chart(fig_fastest)
 
     # Display data quality issues
-    missing_orgs = filtered_df['Organization'].isnull().sum()
+    missing_orgs = df['Organization'].isnull().sum()
     if missing_orgs > 0:
         st.warning(f"There are {missing_orgs} models with missing organization information.")
 
-    missing_dates = filtered_df['Release Date'].isnull().sum()
+    missing_dates = df['Release Date'].isnull().sum()
     if missing_dates > 0:
         st.warning(f"There are {missing_dates} models with missing or invalid release dates.")
 else:
