@@ -56,18 +56,21 @@ st.markdown("""
         padding: 10px;
         border-radius: 10px;
         text-align: center;
-        font-size: 20px;
-        color: #1A73E8;
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 20px;
     }
     .release-cycle-icon {
         font-size: 25px;
         margin-right: 10px;
     }
-    .release-cycle-text {
-        font-size: 25px;
+    .release-cycle-company {
+        color: #1A73E8;
+        font-weight: bold;
+    }
+    .release-cycle-time {
+        color: #34A853;
         font-weight: bold;
     }
     </style>
@@ -130,6 +133,12 @@ if not df.empty:
     start_date = pd.to_datetime(start_date)
     end_date = pd.to_datetime(end_date)
 
+    # Apply filters
+    if selected_companies:
+        filtered_df = df[df['Organization'].isin(selected_companies) & (df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
+    else:
+        filtered_df = df[(df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
+
     # RAW DATA toggle switch
     raw_data = st.sidebar.checkbox('Raw Data')
 
@@ -139,12 +148,6 @@ if not df.empty:
         filtered_df['Release Date'] = filtered_df['Release Date'].dt.strftime('%Y-%m')
         st.write(filtered_df)
     else:
-        # Apply filters
-        if selected_companies:
-            filtered_df = df[df['Organization'].isin(selected_companies) & (df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
-        else:
-            filtered_df = df[(df['Release Date'] >= start_date) & (df['Release Date'] <= end_date)]
-        
         # Create monthly counts by organization
         monthly_counts = filtered_df.groupby(['Year-Month', 'Organization']).size().unstack(fill_value=0)
         
@@ -235,7 +238,7 @@ if not df.empty:
             st.markdown(f"""
                 <div class="release-cycle">
                     <i class="fa fa-clock-o release-cycle-icon" aria-hidden="true"></i>
-                    <span class="release-cycle-text">Average release cycle for {selected_company}: {company_months} months and {company_days} days</span>
+                    <span class="release-cycle-company">{selected_company}</span>: <span class="release-cycle-time">{company_months} months and {company_days} days</span>
                 </div>
             """, unsafe_allow_html=True)
         
