@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import json
 from streamlit_plotly_events import plotly_events
 
@@ -126,10 +127,22 @@ if not df.empty:
                       labels={'x': 'Month', 'y': 'Number of Models'},
                       )
     else:  # Line (Stacked)
-        fig = px.line(plot_data, x=plot_data.index, y=plot_data.columns, 
-                      title=f'{title_prefix} by Company (Line)',
-                      labels={'value': 'Number of Models', 'Year-Month': 'Month'},
-                      color_discrete_map=company_colors)
+        fig = go.Figure()
+        stacked_data = plot_data.copy()
+        for company in stacked_data.columns:
+            fig.add_trace(go.Scatter(
+                x=stacked_data.index,
+                y=stacked_data[company],
+                mode='lines',
+                name=company,
+                stackgroup='one'  # This makes the lines stack
+            ))
+        fig.update_layout(
+            title=f'{title_prefix} by Company (Stacked Line)',
+            xaxis_title='Month',
+            yaxis_title='Number of Models',
+            hovermode='x unified'
+        )
 
     fig.update_layout(
         legend=dict(orientation='h', y=-0.2, xanchor='center', x=0.5),
@@ -138,7 +151,7 @@ if not df.empty:
     )
     
     # Update hover information to include the company
-    fig.update_traces(hovertemplate='Company=%{legendgroup}<br>Date=%{x}<br>Models=%{y}')
+    fig.update_traces(hovertemplate='Company=%{name}<br>Date=%{x}<br>Models=%{y}')
 
     # Remove the legend
     fig.update_layout(showlegend=False)
